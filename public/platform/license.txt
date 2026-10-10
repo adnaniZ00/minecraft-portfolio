@@ -1,0 +1,11 @@
+Model Information:
+* title:	Flat Minecraft Map By CreeperCoastal
+* source:	https://sketchfab.com/3d-models/flat-minecraft-map-by-creepercoastal-dbadff758ef54578bd1154f1f214fb02
+* author:	CreeperCoastal (https://sketchfab.com/CreeperCoastal)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Flat Minecraft Map By CreeperCoastal" (https://sketchfab.com/3d-models/flat-minecraft-map-by-creepercoastal-dbadff758ef54578bd1154f1f214fb02) by CreeperCoastal (https://sketchfab.com/CreeperCoastal) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

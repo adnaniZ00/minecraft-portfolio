@@ -1,0 +1,11 @@
+Model Information:
+* title:	Skelly
+* source:	https://sketchfab.com/3d-models/skelly-449766b0b8ac4e398b661251246200be
+* author:	Ian Murnane (https://sketchfab.com/imurnane)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Skelly" (https://sketchfab.com/3d-models/skelly-449766b0b8ac4e398b661251246200be) by Ian Murnane (https://sketchfab.com/imurnane) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

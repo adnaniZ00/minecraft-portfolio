@@ -1,0 +1,11 @@
+Model Information:
+* title:	Minecraft – Steve (Fan Model 3D)
+* source:	https://sketchfab.com/3d-models/minecraft-steve-fan-model-3d-87f0e21e26a64215a5bb668a4c594f6e
+* author:	ronildo.facanha (https://sketchfab.com/ronildo.facanha)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Minecraft – Steve (Fan Model 3D)" (https://sketchfab.com/3d-models/minecraft-steve-fan-model-3d-87f0e21e26a64215a5bb668a4c594f6e) by ronildo.facanha (https://sketchfab.com/ronildo.facanha) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

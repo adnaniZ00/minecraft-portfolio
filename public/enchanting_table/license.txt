@@ -1,0 +1,11 @@
+Model Information:
+* title:	Enchanting Table
+* source:	https://sketchfab.com/3d-models/enchanting-table-1b1acafa3d864cf29e59332e424815b2
+* author:	Brendan George (https://sketchfab.com/Brendan.George)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Enchanting Table" (https://sketchfab.com/3d-models/enchanting-table-1b1acafa3d864cf29e59332e424815b2) by Brendan George (https://sketchfab.com/Brendan.George) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

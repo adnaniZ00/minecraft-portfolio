@@ -1,0 +1,11 @@
+Model Information:
+* title:	hut-for-one
+* source:	https://sketchfab.com/3d-models/hut-for-one-414ecb790cd14a98a563ed25fe6f8dd1
+* author:	madexc (https://sketchfab.com/madexc)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "hut-for-one" (https://sketchfab.com/3d-models/hut-for-one-414ecb790cd14a98a563ed25fe6f8dd1) by madexc (https://sketchfab.com/madexc) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

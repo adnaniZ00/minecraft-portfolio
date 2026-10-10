@@ -1,0 +1,52 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+canvas {
+  display: block;
+}
+
+.modal {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 100;
+}
+
+.time-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000; /* Keeps it above the 3D canvas */
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: 2px solid white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.coord-tracker {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  padding: 10px 15px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #00ff00; /* Hacker green! */
+  border: 2px solid #555;
+  border-radius: 5px;
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: bold;
+  pointer-events: none; /* So it doesn't block clicks */
+}

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Villager house with animations
+* source:	https://sketchfab.com/3d-models/villager-house-with-animations-b60bf19bdad641c98c48d82ceb9ec3c0
+* author:	geoplex2022 (https://sketchfab.com/geoplex2022)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Villager house with animations" (https://sketchfab.com/3d-models/villager-house-with-animations-b60bf19bdad641c98c48d82ceb9ec3c0) by geoplex2022 (https://sketchfab.com/geoplex2022) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
