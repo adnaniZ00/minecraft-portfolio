@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
+import { playSound } from "../utils/sound";
 
 export function Skeleton({
   steveRef,
@@ -63,11 +64,13 @@ export function Skeleton({
           fireTimer.current = 2.0; // Draw and aim bow before firing
           actions?.idle?.fadeOut(0.3);
           actions?.aim?.reset().fadeIn(0.2).play();
+          playSound("skeleton", { volume: 0.35 });
         } else if (combatState.current === "aiming" && fireTimer.current <= 0) {
           // Trigger bow release animation
           combatState.current = "firing";
           actions?.aim?.stop();
           actions?.fire?.reset().play();
+          playSound("skeleton", { volume: 0.4 });
 
           // Reset back to aim after releasing arrow
           fireTimer.current = 2.2;

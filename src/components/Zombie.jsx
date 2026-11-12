@@ -3,6 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
 import { ZOMBIE_TRIGGER_ZONES } from "../constants/zombieZones";
+import { playSound } from "../utils/sound";
 
 export function Zombie({ steveRef }) {
   const { scene, animations } = useGLTF("/zombie/scene.gltf");
@@ -16,16 +17,26 @@ export function Zombie({ steveRef }) {
     const stevePos = steveRef.current.position;
     let isNear = false;
 
-    // Check if Steve is in any trigger zone (expanded by +3 coordinates on all sides)
-    for (const zone of ZOMBIE_TRIGGER_ZONES) {
-      if (
-        stevePos.x >= zone.minX - 3 &&
-        stevePos.x <= zone.maxX + 3 &&
-        stevePos.z >= zone.minZ - 3 &&
-        stevePos.z <= zone.maxZ + 3
-      ) {
-        isNear = true;
-        break;
+    // Check distance directly from Zombie as well as expanded trigger zones
+    const dxDirect = stevePos.x - zombieRef.current.position.x;
+    const dzDirect = stevePos.z - zombieRef.current.position.z;
+    const distToZombie = Math.hypot(dxDirect, dzDirect);
+
+    // Direct radius detection (up to 25 units)
+    if (distToZombie <= 25) {
+      isNear = true;
+    } else {
+      // Check if Steve is in any trigger zone (expanded by +8 coordinates on all sides)
+      for (const zone of ZOMBIE_TRIGGER_ZONES) {
+        if (
+          stevePos.x >= zone.minX - 8 &&
+          stevePos.x <= zone.maxX + 8 &&
+          stevePos.z >= zone.minZ - 8 &&
+          stevePos.z <= zone.maxZ + 8
+        ) {
+          isNear = true;
+          break;
+        }
       }
     }
 
@@ -50,6 +61,7 @@ export function Zombie({ steveRef }) {
         if (actions[animName]) {
           actions[animName].reset().fadeIn(0.5).play();
         }
+        playSound("zombie", { volume: 0.35 });
       }
     } else {
       // Smoothly return to default rotation

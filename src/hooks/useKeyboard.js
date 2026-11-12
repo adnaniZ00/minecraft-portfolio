@@ -1,10 +1,29 @@
 import { useRef, useEffect } from "react";
 
 export const useKeyboard = () => {
-  const keys = useRef({ w: false, a: false, s: false, d: false, " ": false });
+  const keys = useRef({
+    w: false,
+    a: false,
+    s: false,
+    d: false,
+    " ": false,
+    e: false,
+    arrowup: false,
+    arrowdown: false,
+    arrowleft: false,
+    arrowright: false,
+  });
 
   useEffect(() => {
     const handleKeyDown = (e) => {
+      // Prevent spacebar from clicking focused buttons or scrolling the page
+      if (e.key === " " || e.code === "Space") {
+        if (document.activeElement && document.activeElement.tagName === "BUTTON") {
+          document.activeElement.blur();
+        }
+        e.preventDefault();
+      }
+
       const key = e.key.toLowerCase();
       if (key in keys.current) {
         keys.current[key] = true;
@@ -19,7 +38,18 @@ export const useKeyboard = () => {
     };
 
     const handleBlur = () => {
-      keys.current = { w: false, a: false, s: false, d: false, " ": false };
+      keys.current = {
+        w: false,
+        a: false,
+        s: false,
+        d: false,
+        " ": false,
+        e: false,
+        arrowup: false,
+        arrowdown: false,
+        arrowleft: false,
+        arrowright: false,
+      };
     };
 
     window.addEventListener("keydown", handleKeyDown);

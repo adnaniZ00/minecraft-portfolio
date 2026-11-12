@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { WORLD_OBJECTS } from "../constants/worldObjects";
+import { playSound } from "../utils/sound";
 
 export function Pig({ initialPosition = [36, 6, -45] }) {
   const groupRef = useRef();
@@ -50,6 +51,11 @@ export function Pig({ initialPosition = [36, 6, -45] }) {
         // Switch to walk animation
         actions?.idle?.fadeOut(0.2);
         actions?.walk?.reset().fadeIn(0.2).play();
+
+        // 35% chance to oink when starting to roam
+        if (Math.random() < 0.35) {
+          playSound("pig", { volume: 0.3 });
+        }
       }
     } else if (ai.state === "walking") {
       // 1. Smoothly rotate toward target walking angle

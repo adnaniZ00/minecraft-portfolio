@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
-import { useGLTF, Text, useAnimations } from "@react-three/drei";
+import { useGLTF, Text, Billboard, useAnimations } from "@react-three/drei";
 import { gsap } from "gsap";
+import { playSound } from "../utils/sound";
 
 export function InteractiveModel({
   path,
@@ -12,7 +13,6 @@ export function InteractiveModel({
   labelHeight = 3,
   labelOffSet = 0,
   labelRightSet = 0,
-  labelRotation = [0, 0, 0],
   hitboxSize = [5, 6, 5],
 }) {
   const { scene, animations } = useGLTF(path);
@@ -56,6 +56,15 @@ export function InteractiveModel({
         }
       });
     }
+
+    // 4. Play ambient landmark sound on hover (portal plays only portal.ogg)
+    if (path.includes("chest")) {
+      playSound("chest", { volume: 0.45 });
+    } else if (path.includes("enchanting_table")) {
+      playSound("enchant", { volume: 0.45 });
+    } else if (path.includes("portal")) {
+      playSound("portal", { volume: 0.45 });
+    }
   };
 
   const handlePointerOut = (e) => {
@@ -95,6 +104,43 @@ export function InteractiveModel({
     }
   };
 
+  const handleClick = (e) => {
+    if (e?.stopPropagation) {
+      e.stopPropagation();
+    }
+
+    // Trigger visual bounce on model tap
+    if (modelRef.current) {
+      gsap.to(modelRef.current.scale, {
+        x: scale * 1.25,
+        y: scale * 1.25,
+        z: scale * 1.25,
+        duration: 0.25,
+        ease: "back.out(2)",
+        yoyo: true,
+        repeat: 1,
+      });
+    }
+
+    // Play interaction sound on click
+    if (path.includes("portal")) {
+      playSound("portalTrigger", { volume: 0.5 });
+      setTimeout(() => {
+        playSound("portalTravel", { volume: 0.5 });
+      }, 400);
+    } else if (path.includes("chest")) {
+      playSound("chest", { volume: 0.6 });
+    } else if (path.includes("enchanting_table")) {
+      playSound("enchant", { volume: 0.6 });
+    } else {
+      playSound("button", { volume: 0.5 });
+    }
+
+    if (onClick) {
+      onClick(e);
+    }
+  };
+
   useEffect(() => {
     if (!modelRef.current) return;
     const floatAnim = gsap.to(modelRef.current.position, {
@@ -115,12 +161,12 @@ export function InteractiveModel({
       position={position}
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
-      onClick={onClick}
+      onClick={handleClick}
     >
-      {/* Generous hitbox to guarantee hover & click even from distances and thin angles */}
-      <mesh visible={false} position={[0, (hitboxSize[1] || 4) / 2, 0]}>
+      {/* Generous invisible hitbox to guarantee tap & click detection even from distances and thin angles */}
+      <mesh position={[0, (hitboxSize[1] || 4) / 2, 0]}>
         <boxGeometry args={hitboxSize} />
-        <meshBasicMaterial transparent opacity={0} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
 
       <primitive
@@ -131,20 +177,45 @@ export function InteractiveModel({
       />
 
       {label && (
-        <group
+        <Billboard
           ref={labelRef}
           position={[labelOffSet, labelHeight, labelRightSet]}
-          rotation={labelRotation}
+          follow={true}
+          lockX={false}
+          lockY={false}
+          lockZ={false}
         >
+          {/* Minecraft Nametag dark plate container */}
+          <mesh position={[0, 0, -0.05]}>
+            <planeGeometry args={[Math.max(2.8, label.length * 0.42 + 0.8), 1.2]} />
+            <meshBasicMaterial
+              color="#000000"
+              transparent
+              opacity={isHovered ? 0.85 : 0.65}
+            />
+          </mesh>
+
+          {/* Minecraft Nametag Border */}
+          <mesh position={[0, 0, -0.04]}>
+            <planeGeometry args={[Math.max(2.9, label.length * 0.42 + 0.9), 1.3]} />
+            <meshBasicMaterial
+              color={isHovered ? "#ffd700" : "#444444"}
+              transparent
+              opacity={isHovered ? 0.95 : 0.45}
+            />
+          </mesh>
+
           <Text
-            fontSize={0.65}
-            color={isHovered ? "#ffd700" : "white"}
-            outlineWidth={0.06}
+            fontSize={0.85}
+            color={isHovered ? "#ffff55" : "#ffffff"}
+            outlineWidth={0.08}
             outlineColor="#000000"
+            anchorX="center"
+            anchorY="middle"
           >
             {label}
           </Text>
-        </group>
+        </Billboard>
       )}
 
       {/* Special portal aura glow when hovered */}
