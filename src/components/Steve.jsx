@@ -243,10 +243,10 @@ export function Steve({ orbitRef, steveRef, joystickInput, isMobileJumping, onNe
       eKeyWasPressed.current = false;
     }
 
-    const tracker = document.getElementById("coord-tracker");
-    if (tracker) {
-      tracker.innerText = `X: ${ref.current.position.x.toFixed(1)} | Y: ${ref.current.position.y.toFixed(1)} | Z: ${ref.current.position.z.toFixed(1)}`;
-    }
+    // const tracker = document.getElementById("coord-tracker");
+    // if (tracker) {
+    //   tracker.innerText = `X: ${ref.current.position.x.toFixed(1)} | Y: ${ref.current.position.y.toFixed(1)} | Z: ${ref.current.position.z.toFixed(1)}`;
+    // }
   });
 
   return <primitive ref={ref} object={scene} scale={2.5} position={[0, 6, 0]} />;

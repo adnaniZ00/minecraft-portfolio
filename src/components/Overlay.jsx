@@ -26,9 +26,9 @@ export function Overlay({
 
   return (
     <>
-      <div id="coord-tracker" className="coord-tracker">
+      {/* <div id="coord-tracker" className="coord-tracker">
         X: 0.0 | Y: 0.0 | Z: 0.0
-      </div>
+      </div> */}
 
       <div className="hud-top-right">
         <button
