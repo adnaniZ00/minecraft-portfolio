@@ -26,7 +26,8 @@ export function Steve({ orbitRef, steveRef, joystickInput, isMobileJumping, onNe
   const internalRef = useRef();
   const ref = steveRef || internalRef;
   const keys = useKeyboard();
-  const speed = 1.2;
+  const speed = 0.7;       // Desktop / PC keyboard speed
+  const mobileSpeed = 0.7; // Mobile touch joystick speed (adjust this number manually anytime)
   const isJumping = useRef(false);
   const velocityY = useRef(0);
 
@@ -36,6 +37,8 @@ export function Steve({ orbitRef, steveRef, joystickInput, isMobileJumping, onNe
 
   // Track camera offset smoothly to prevent stretching/lagging when walking
   const currentOffset = useRef(new THREE.Vector3(10, 40, 70));
+  // Locked control orientation: only updates when the user stops holding movement inputs
+  const isControlFlippedRef = useRef(false);
   // E-key debouncing to prevent multi-triggering per single press
   const eKeyWasPressed = useRef(false);
   const currentNearestRef = useRef(null);
@@ -53,35 +56,81 @@ export function Steve({ orbitRef, steveRef, joystickInput, isMobileJumping, onNe
   useFrame((state, delta) => {
     if (!ref.current) return;
     const dt = Math.min(delta, 0.1);
+    // Frame-rate normalization factor (1.0 at 60 FPS) to prevent 90Hz/120Hz mobile devices from running at 2x speed
+    const timeScale = dt * 60;
 
     let isMoving = false;
     let dx = 0;
     let dz = 0;
 
+    // Check if the user is currently holding any movement keys or joystick
+    const hasMovementInput = Boolean(
+      keys.current.w ||
+      keys.current.s ||
+      keys.current.a ||
+      keys.current.d ||
+      keys.current.arrowup ||
+      keys.current.arrowdown ||
+      keys.current.arrowleft ||
+      keys.current.arrowright ||
+      (joystickInput?.current && Math.hypot(joystickInput.current.x, joystickInput.current.y) > 0.05)
+    );
+
+    // Only update the control orientation when the user STOPS holding movement keys/inputs
+    // This guarantees controls never abruptly reverse mid-stride while actively holding a direction
+    if (!hasMovementInput) {
+      isControlFlippedRef.current = currentOffset.current.z < 0;
+    }
+
+    // Dynamic camera-relative direction signs (locked during active movement):
+    // When camera is facing North (default, currentOffset.z >= 0):
+    //   Forward (W / Joystick Up) moves toward North (-Z)
+    //   Right (D / Joystick Right) moves toward East (+X)
+    // When camera changes to face South near the South boundary (currentOffset.z < 0):
+    //   Forward (W / Joystick Up) moves toward South (+Z)
+    //   Right (D / Joystick Right) moves toward West (-X)
+    const isCameraSouth = isControlFlippedRef.current;
+    const forwardSign = isCameraSouth ? 1 : -1;
+    const rightSign = isCameraSouth ? -1 : 1;
+
     // Check which keys are held down (WASD or Arrow Keys)
     if (keys.current.w || keys.current.arrowup) {
-      dz -= speed;
+      dz += forwardSign * speed;
       isMoving = true;
     }
     if (keys.current.s || keys.current.arrowdown) {
-      dz += speed;
+      dz -= forwardSign * speed;
       isMoving = true;
     }
     if (keys.current.a || keys.current.arrowleft) {
-      dx -= speed;
+      dx -= rightSign * speed;
       isMoving = true;
     }
     if (keys.current.d || keys.current.arrowright) {
-      dx += speed;
+      dx += rightSign * speed;
       isMoving = true;
     }
 
     // Touch Joystick Vector Input (Mobile / Tablet)
-    if (joystickInput?.current && (Math.abs(joystickInput.current.x) > 0.05 || Math.abs(joystickInput.current.y) > 0.05)) {
-      dx += joystickInput.current.x * speed;
-      dz += joystickInput.current.y * speed;
-      isMoving = true;
+    // Decreased speed elevation for touch wheel so mobile navigation is steady, smooth, and easily controllable
+    if (joystickInput?.current) {
+      const jx = joystickInput.current.x;
+      const jy = joystickInput.current.y;
+      const mag = Math.hypot(jx, jy);
+      if (mag > 0.05) {
+        const clampedMag = Math.min(1, mag);
+        // Uses the dedicated mobileSpeed setting directly (scaled by touch tilt distance)
+        const mobileSpeedFactor = mobileSpeed * clampedMag;
+        // Map joystick axes to camera-relative movement (Up = Forward, Right = Right)
+        dx += rightSign * (jx / mag) * mobileSpeedFactor;
+        dz += -forwardSign * (jy / mag) * mobileSpeedFactor;
+        isMoving = true;
+      }
     }
+
+    // Apply frame-rate normalization to movement steps
+    dx *= timeScale;
+    dz *= timeScale;
 
     // --- 1. COLLISION PREDICTION ---
     // Calculate where Steve is trying to walk
@@ -150,8 +199,8 @@ export function Steve({ orbitRef, steveRef, joystickInput, isMobileJumping, onNe
     // Apply gravity if he is jumping, or if he walked off a ledge!
     if (isJumping.current || ref.current.position.y > currentGround) {
       wasInAir.current = true;
-      velocityY.current -= 0.02;
-      ref.current.position.y += velocityY.current;
+      velocityY.current -= 0.02 * timeScale;
+      ref.current.position.y += velocityY.current * timeScale;
 
       // When feet hit the ground
       if (ref.current.position.y <= currentGround) {
