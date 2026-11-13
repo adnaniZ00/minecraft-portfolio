@@ -6,6 +6,20 @@ import { useKeyboard } from "../hooks/useKeyboard";
 import { WORLD_OBJECTS } from "../constants/worldObjects";
 import { playStepSound, playJumpSound } from "../utils/sound";
 
+function getGroundHeight(x, z) {
+  let ground = 6;
+  const len = WORLD_OBJECTS.length;
+  for (let i = 0; i < len; i++) {
+    const obj = WORLD_OBJECTS[i];
+    if (x >= obj.minX && x <= obj.maxX && z >= obj.minZ && z <= obj.maxZ) {
+      if (obj.groundHeight > ground) {
+        ground = obj.groundHeight;
+      }
+    }
+  }
+  return ground;
+}
+
 export function Steve({ orbitRef, steveRef, joystickInput, isMobileJumping, onNearLandmarkChange, onInteractLandmark }) {
   const { scene, animations } = useGLTF("/steve/scene.gltf");
   const { actions } = useAnimations(animations, scene);
@@ -75,14 +89,7 @@ export function Steve({ orbitRef, steveRef, joystickInput, isMobileJumping, onNe
     const nextZ = ref.current.position.z + dz;
 
     // Find the height of the ground at that exact spot
-    let targetGround = 6; // Default grass level
-    for (const obj of WORLD_OBJECTS) {
-      if (nextX >= obj.minX && nextX <= obj.maxX && nextZ >= obj.minZ && nextZ <= obj.maxZ) {
-        if (obj.groundHeight > targetGround) {
-          targetGround = obj.groundHeight;
-        }
-      }
-    }
+    const targetGround = getGroundHeight(nextX, nextZ);
 
     // If the ground in front of him is taller than his knees, he hits a wall!
     if (targetGround > ref.current.position.y + 0.5) {
@@ -138,19 +145,7 @@ export function Steve({ orbitRef, steveRef, joystickInput, isMobileJumping, onNe
     }
 
     // --- 4. DYNAMIC GRAVITY ---
-    let currentGround = 6;
-    for (const obj of WORLD_OBJECTS) {
-      if (
-        ref.current.position.x >= obj.minX &&
-        ref.current.position.x <= obj.maxX &&
-        ref.current.position.z >= obj.minZ &&
-        ref.current.position.z <= obj.maxZ
-      ) {
-        if (obj.groundHeight > currentGround) {
-          currentGround = obj.groundHeight;
-        }
-      }
-    }
+    const currentGround = getGroundHeight(ref.current.position.x, ref.current.position.z);
 
     // Apply gravity if he is jumping, or if he walked off a ledge!
     if (isJumping.current || ref.current.position.y > currentGround) {
@@ -251,3 +246,5 @@ export function Steve({ orbitRef, steveRef, joystickInput, isMobileJumping, onNe
 
   return <primitive ref={ref} object={scene} scale={2.5} position={[0, 6, 0]} />;
 }
+
+useGLTF.preload("/steve/scene.gltf");

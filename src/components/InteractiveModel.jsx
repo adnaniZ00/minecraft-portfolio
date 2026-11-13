@@ -218,22 +218,22 @@ export function InteractiveModel({
         </Billboard>
       )}
 
-      {/* Special portal aura glow when hovered */}
-      {path.includes("portal") && (
+      {/* Special portal aura glow only when hovered to avoid shading 300k vertices when idle */}
+      {path.includes("portal") && isHovered && (
         <pointLight
           color="#c084fc"
-          intensity={isHovered ? 6 : 1.5}
-          distance={18}
+          intensity={5}
+          distance={16}
           position={[0, 4, 0]}
         />
       )}
 
-      {/* Special enchanting table magical glow when hovered */}
-      {path.includes("enchanting_table") && (
+      {/* Special enchanting table magical glow only when hovered */}
+      {path.includes("enchanting_table") && isHovered && (
         <pointLight
           color="#60a5fa"
-          intensity={isHovered ? 4 : 1}
-          distance={12}
+          intensity={3.5}
+          distance={10}
           position={[0, 2, 0]}
         />
       )}

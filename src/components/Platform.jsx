@@ -6,16 +6,22 @@ export function Platform() {
 
   useEffect(() => {
     scene.traverse((child) => {
-      if (child.isMesh && child.material) {
-        // Fix transparency sorting:
-        // Minecraft flora/leaves use cutout alpha (alphaTest), not blending.
-        // alphaMode: "BLEND" in gltf causes Three.js to sort them after opaque objects,
-        // which was causing them to draw on top of the world border walls!
-        if (child.material.transparent) {
-          child.material.alphaTest = 0.5;
-          child.material.transparent = false;
-          child.material.depthWrite = true;
-          child.material.needsUpdate = true;
+      if (child.isMesh) {
+        // Disable raycasting on 300,000 background landscape triangles
+        // so pointer movement and camera orbits don't calculate ray collisions per-frame
+        child.raycast = () => {};
+
+        if (child.material) {
+          // Fix transparency sorting:
+          // Minecraft flora/leaves use cutout alpha (alphaTest), not blending.
+          // alphaMode: "BLEND" in gltf causes Three.js to sort them after opaque objects,
+          // which was causing them to draw on top of the world border walls!
+          if (child.material.transparent) {
+            child.material.alphaTest = 0.5;
+            child.material.transparent = false;
+            child.material.depthWrite = true;
+            child.material.needsUpdate = true;
+          }
         }
       }
     });
@@ -23,3 +29,5 @@ export function Platform() {
 
   return <primitive object={scene} scale={3} position={[0, 0, 0]} rotation={[0, 3.14, 0]} />;
 }
+
+useGLTF.preload("/platform/scene.gltf");

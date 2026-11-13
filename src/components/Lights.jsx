@@ -9,7 +9,6 @@ export function Lights({ isDay = true }) {
         position={isDay ? [6, 10, 6] : [-6, 14, -6]}
         intensity={isDay ? 1.2 : 0.85}
         color={isDay ? "#fff8e7" : "#bcd7ff"}
-        castShadow
       />
       {/* Subtle moonlit fill light at night so objects and terrain remain clearly visible */}
       {!isDay && (

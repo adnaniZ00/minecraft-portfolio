@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Stars } from "@react-three/drei";
+import { OrbitControls, Stars, AdaptiveDpr, AdaptiveEvents, useGLTF } from "@react-three/drei";
 import "./App.css";
 
 // 3D Scene Components
@@ -96,7 +96,20 @@ export default function App() {
         }}
       />
 
-      <Canvas camera={{ position: [10, 40, 70], fov: 50 }}>
+      <Canvas
+        camera={{ position: [10, 40, 70], fov: 50 }}
+        dpr={[1, 1.5]}
+        performance={{ min: 0.5 }}
+        gl={{
+          powerPreference: "high-performance",
+          antialias: true,
+          stencil: false,
+          depth: true,
+        }}
+      >
+        <AdaptiveDpr pixelated />
+        <AdaptiveEvents />
+
         {/* Dynamic sky and fog reflecting day/night */}
         <color attach="background" args={[isDay ? "#87ceeb" : "#0d172e"]} />
         <fog
@@ -109,11 +122,11 @@ export default function App() {
           <Stars
             radius={160}
             depth={60}
-            count={4500}
-            factor={5}
+            count={1200}
+            factor={4}
             saturation={0}
             fade
-            speed={1.5}
+            speed={1}
           />
         )}
 
@@ -181,3 +194,10 @@ export default function App() {
     </>
   );
 }
+
+// Preload interactive landmarks and mobs for instantaneous rendering
+useGLTF.preload("/enchanting_table/scene.gltf");
+useGLTF.preload("/chest/scene.gltf");
+useGLTF.preload("/portal/scene.gltf");
+useGLTF.preload("/pig/scene.gltf");
+useGLTF.preload("/zombie/scene.gltf");
