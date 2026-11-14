@@ -20,7 +20,15 @@ function getGroundHeight(x, z) {
   return ground;
 }
 
-export function Steve({ orbitRef, steveRef, joystickInput, isMobileJumping, onNearLandmarkChange, onInteractLandmark }) {
+export function Steve({
+  orbitRef,
+  steveRef,
+  joystickInput,
+  isMobileJumping,
+  isModalOpen,
+  onNearLandmarkChange,
+  onInteractLandmark,
+}) {
   const { scene, animations } = useGLTF("/steve/scene.gltf");
   const { actions } = useAnimations(animations, scene);
   const internalRef = useRef();
@@ -276,10 +284,16 @@ export function Steve({ orbitRef, steveRef, joystickInput, isMobileJumping, onNe
     }
 
     // --- 7. PRESS "E" KEY TO INTERACT ---
+    const isModalActive = Boolean(
+      isModalOpen ||
+      (typeof document !== "undefined" && document.querySelector(".mc-modal-backdrop, .mc-welcome-backdrop"))
+    );
+
     if (keys.current.e) {
       if (!eKeyWasPressed.current) {
         eKeyWasPressed.current = true;
-        if (nearest && onInteractLandmark) {
+        // Only trigger interaction and sound if a modal is not already open
+        if (!isModalActive && nearest && onInteractLandmark) {
           onInteractLandmark(nearest);
         }
       }

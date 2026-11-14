@@ -109,6 +109,11 @@ export function InteractiveModel({
       e.stopPropagation();
     }
 
+    // Do not trigger landmark interaction sounds if a modal is already open
+    if (typeof document !== "undefined" && document.querySelector(".mc-modal-backdrop, .mc-welcome-backdrop")) {
+      return;
+    }
+
     // Trigger visual bounce on model tap
     if (modelRef.current) {
       gsap.to(modelRef.current.scale, {

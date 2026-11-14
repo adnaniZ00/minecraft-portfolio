@@ -31,6 +31,15 @@ export default function App() {
   const [isDay, setIsDay] = useState(true);
   const [nearLandmark, setNearLandmark] = useState(null);
 
+  // Synchronous refs to prevent stale closure reads during animation frames
+  const activeSectionRef = useRef(activeSection);
+  const showWelcomeRef = useRef(showWelcome);
+
+  useEffect(() => {
+    activeSectionRef.current = activeSection;
+    showWelcomeRef.current = showWelcome;
+  }, [activeSection, showWelcome]);
+
   // Ensure right-click context menu (Inspect / DevTools) is not blocked by Canvas or OrbitControls
   useEffect(() => {
     const handleContextMenu = (e) => {
@@ -52,7 +61,12 @@ export default function App() {
 
   // Triggered when user presses "E" near a landmark (or clicks the prompt banner)
   const handleInteractLandmark = (landmark) => {
+    // Prevent repeated sound triggers when modal is already open
     if (!landmark) return;
+    if (activeSectionRef.current || showWelcomeRef.current) return;
+    if (typeof document !== "undefined" && document.querySelector(".mc-modal-backdrop, .mc-welcome-backdrop")) {
+      return;
+    }
 
     // Specific audio requirements for each landmark
     if (landmark.id === "contact") {
@@ -86,7 +100,7 @@ export default function App() {
         isDay={isDay}
         onToggleTime={() => setIsDay((prev) => !prev)}
         onOpenCredits={() => handleOpenSection("credits")}
-        nearLandmark={nearLandmark}
+        nearLandmark={activeSection || showWelcome ? null : nearLandmark}
         onInteractLandmark={handleInteractLandmark}
         onJoystickMove={(vec) => {
           joystickInput.current = vec;
@@ -186,6 +200,7 @@ export default function App() {
           steveRef={steveRef}
           joystickInput={joystickInput}
           isMobileJumping={isMobileJumping}
+          isModalOpen={Boolean(activeSection || showWelcome)}
           onNearLandmarkChange={setNearLandmark}
           onInteractLandmark={handleInteractLandmark}
         />
